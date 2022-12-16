@@ -87,7 +87,9 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     return {
         props: {
             episode,
+            revalidate: 60 * 60 * 24, //24 hours
+
         },
-        revalidade: 60 * 60 * 24, //24 hours
+        
     }
 }
