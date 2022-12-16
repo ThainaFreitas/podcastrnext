@@ -1,5 +1,6 @@
 import { GetStaticProps } from "next";
 import Image from 'next/image';
+import Link from "next/link";
 import { format, parseISO } from 'date-fns'
 import ptBR from 'date-fns/locale/pt'
 import { api } from "../services/api";
@@ -11,7 +12,6 @@ type Episode = {
   id: string;
   title: string;
   thumbnail: string;
-  description: string;
   members: string;
   duration: string;
   durationAsString: string;
@@ -44,7 +44,9 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                 />
 
                 <div className={styles.episodeDetails}>
-                  <a href="">{episode.title}</a>
+                  <Link href={`/episodes/${episode.id}`}>
+                    {episode.title}
+                  </Link>
                   <p>{episode.members}s</p>
                   <span>{episode.publishedAt}</span>
                   <span>{episode.durationAsString}</span>
@@ -64,12 +66,12 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
         <table cellSpacing={0}>
           <thead>
             <tr>
-            <th></th>
-            <th>Podcast</th>
-            <th>Integrantes</th>
-            <th>Data</th>
-            <th>Duração</th>
-            <th></th>
+              <th></th>
+              <th>Podcast</th>
+              <th>Integrantes</th>
+              <th>Data</th>
+              <th>Duração</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -77,16 +79,18 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
               return (
                 <tr key={episode.id}>
                   <td style={{ width: 72 }}>
-                    <Image 
-                    width={120}
-                    height={120}
-                    src={episode.thumbnail}
-                    alt={episode.title}
-                    objectFit="cover"
+                    <Image
+                      width={120}
+                      height={120}
+                      src={episode.thumbnail}
+                      alt={episode.title}
+                      objectFit="cover"
                     />
                   </td>
                   <td>
-                    <a href="">{episode.title}</a>
+                  <Link  href={`/episodes/${episode.id}`}>
+                   {episode.title}
+                    </Link>
                   </td>
                   <td>{episode.members}</td>
                   <td style={{ width: 100 }}>{episode.publishedAt}</td>
@@ -124,8 +128,8 @@ export const getStaticProps: GetStaticProps = async () => {
       publishedAt: format(parseISO(episode.published_at), 'd MMM yy', { locale: ptBR }),
       duration: Number(episode.file.duration),
       durationAsString: convertDurationToTimeString(Number(episode.file.duration)),
-      description: episode.file.url,
-    }
+    
+    };
   })
 
   const latestEpisodes = episodes.slice(0, 2);
