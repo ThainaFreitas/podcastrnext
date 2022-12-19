@@ -28,10 +28,10 @@ type EpisodeProps = {
 export default function Episode({ episode }: EpisodeProps) {
     return (
         <div className={styles.episode}>
-            <div className={styles.thumbnail}>
+            <div className={styles.thumbnailContainer}>
                 <Link href="/">
                 <button type='button'>
-                    <img src="/arrow-left.svg" alt='Voltar'></img>
+                    <img src="/arrow-left.svg" alt='Voltar' />
                 </button>
                 </Link>
                 <Image
@@ -42,7 +42,7 @@ export default function Episode({ episode }: EpisodeProps) {
                   objectFit="cover"
                 />
                 <button type='button'>
-                   <img src='/play.svg' alt='Tocar episódio'></img> 
+                   <img src='/play.svg' alt='Tocar episódio' /> 
                 </button>
             </div>
             <header>
@@ -56,7 +56,7 @@ export default function Episode({ episode }: EpisodeProps) {
             className={styles.description} 
             dangerouslySetInnerHTML={{ __html: episode.description }}
             />
-            </div>
+        </div>
         
     )
 }
@@ -80,7 +80,8 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
         publishedAt: format(parseISO(data.published_at), 'd MMM yy', { locale: ptBR }),
         duration: Number(data.file.duration),
         durationAsString: convertDurationToTimeString(Number(data.file.duration)),
-        description: data.file.url,
+        description: data.description,
+        url: data.file.url,
       };
      
     
