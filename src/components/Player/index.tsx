@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import Image from 'next/image';
 import Slider from 'rc-slider';
+
 import 'rc-slider/assets/index.css';
 
 import { PlayerContext } from '../../contexts/PlayerContext';
@@ -56,6 +57,12 @@ export function Player() {
                     </div>
                     <span>00:00</span>
                 </div>
+
+                { episode && (
+                    <audio
+                        src={episode.url}
+                    />
+                )}
                 <div className={styles.buttons}>
                     <button type='button' disabled={!episode}>
                         <img src='/shuffle.svg' alt='Embaralhar' />
