@@ -80,6 +80,7 @@ export function Player() {
             width={300}
             height={300}
             src={episode.thumbnail}
+            alt={episode.title}
             objectFit="cover"
           />
           <strong>{episode.title}</strong>
