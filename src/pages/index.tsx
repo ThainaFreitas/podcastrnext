@@ -1,27 +1,26 @@
-import { GetStaticProps } from "next";
-import Image from 'next/image';
-import Link from "next/link";
-import { format, parseISO } from 'date-fns'
-import ptBR from 'date-fns/locale/pt'
 
-import { api } from "../services/api";
-import { convertDurationToTimeString } from "../utils/convertDurationToTimeString";
-import { usePlayer } from "../contexts/PlayerContext";
+import { GetStaticProps } from 'next';
+import Image from 'next/image';
+import Head from 'next/head';
+import Link from 'next/link'
+import { format, parseISO } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR'
+
+import { api } from '../services/api';
+import { convertDurationToTimeString } from '../utils/convertDurationToTimeString';
+import { usePlayer } from '../contexts/PlayerContext';
 
 import styles from './home.module.scss';
-
-
 
 type Episode = {
   id: string;
   title: string;
   thumbnail: string;
   members: string;
-  duration: string;
+  duration: number;
   durationAsString: string;
   url: string;
   publishedAt: string;
-  // ...
 }
 
 type HomeProps = {
@@ -32,10 +31,14 @@ type HomeProps = {
 export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
   const { playList } = usePlayer()
 
-const episodeList = [...latestEpisodes, ...allEpisodes];
+  const episodeList = [...latestEpisodes, ...allEpisodes];
 
   return (
     <div className={styles.homepage}>
+      <Head>
+        <title>Home | Podcastr</title>
+      </Head>
+
       <section className={styles.latestEpisodes}>
         <h2>Últimos lançamentos</h2>
 
@@ -53,12 +56,13 @@ const episodeList = [...latestEpisodes, ...allEpisodes];
 
                 <div className={styles.episodeDetails}>
                   <Link href={`/episodes/${episode.id}`}>
-                    {episode.title}
+                   {episode.title}
                   </Link>
-                  <p>{episode.members}s</p>
+                  <p>{episode.members}</p>
                   <span>{episode.publishedAt}</span>
                   <span>{episode.durationAsString}</span>
                 </div>
+
                 <button type="button" onClick={() => playList(episodeList, index)}>
                   <img src="/play-green.svg" alt="Tocar episódio" />
                 </button>
@@ -96,8 +100,8 @@ const episodeList = [...latestEpisodes, ...allEpisodes];
                     />
                   </td>
                   <td>
-                  <Link  href={`/episodes/${episode.id}`}>
-                   {episode.title}
+                    <Link href={`/episodes/${episode.id}`}>
+                     {episode.title}
                     </Link>
                   </td>
                   <td>{episode.members}</td>
@@ -136,17 +140,17 @@ export const getStaticProps: GetStaticProps = async () => {
       publishedAt: format(parseISO(episode.published_at), 'd MMM yy', { locale: ptBR }),
       duration: Number(episode.file.duration),
       durationAsString: convertDurationToTimeString(Number(episode.file.duration)),
-    
+      url: episode.file.url,
     };
   })
 
   const latestEpisodes = episodes.slice(0, 2);
-  const allEpisodes = episodes.slice(2, episodes.length)
+  const allEpisodes = episodes.slice(2, episodes.length);
 
   return {
     props: {
       latestEpisodes,
-      allEpisodes
+      allEpisodes,
     },
     revalidate: 60 * 60 * 8,
   }
